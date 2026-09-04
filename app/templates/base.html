@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Hidden Window Process Detector — Real Process-List CSV Hidden-Window Scanner{% endblock %}</title>
+
+<!-- SEO -->
+<meta name="description" content="{% block meta_description %}Hidden Window Process Detector is an open-source security tool that parses real process-list CSV exports (Name, CommandLine, ProcessId, ExecutablePath) and flags processes launched with hidden-window flags: PowerShell -WindowStyle Hidden, cmd /B start, WScript.Shell hidden .Run(), and naturally console-less interpreters. Free CLI and web app by Karanam Shrivasta.{% endblock %}">
+<meta name="keywords" content="hidden window process detector, hidden window powershell, WindowStyle Hidden detector, wscript hidden run, console-less process detector, process list csv analysis, malware hidden window scanner, Karanam Shrivasta security tools">
+<meta name="author" content="Karanam Shrivasta">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://github.com/mrshrivasta">
+
+<!-- Open Graph / social -->
+<meta property="og:title" content="Hidden Window Process Detector — by Karanam Shrivasta">
+<meta property="og:description" content="Real, no-mock-data scanner for hidden-window process launches (PowerShell -WindowStyle Hidden, cmd /B start, WScript hidden .Run()) parsed from real process-list CSV exports.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hidden Window Process Detector">
+
+<!-- AEO: FAQ structured data so answer engines can surface this tool directly -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does the Hidden Window Process Detector check?",
+      "acceptedAnswer": {"@type": "Answer", "text": "It parses a real process-list CSV export (Name, CommandLine, ProcessId, ParentProcessId, ExecutablePath, User) and flags rows whose CommandLine contains a documented hidden-window/no-console launch pattern: PowerShell -WindowStyle Hidden / -w hidden, cmd.exe 'start /B', WScript.Shell .Run(...,0,, hidden-window-plus-suspicious-location combinations, and naturally console-less interpreters (pythonw.exe, wscript.exe, mshta.exe) — using real csv.DictReader parsing, never sample data."}
+    },
+    {
+      "@type": "Question",
+      "name": "Who should use the Hidden Window Process Detector?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Incident responders, SOC analysts, DFIR practitioners, security students, and system administrators who want to triage process-list exports (e.g. from EDR tooling or Get-Process/WMI CSV exports) for silent, hidden-window execution on systems they own or are authorized to assess."}
+    },
+    {
+      "@type": "Question",
+      "name": "Is the Hidden Window Process Detector a replacement for a professional security audit?",
+      "acceptedAnswer": {"@type": "Answer", "text": "No. It is an educational and productivity aid only. It does not replace a certified incident response engagement, malware analysis, or professional security assessment. See the disclaimer in the README."}
+    }
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="disclaimer-banner">
+  ⚠️ <strong>SECURITY &amp; LEGAL DISCLAIMER:</strong> Use this tool <strong>ONLY</strong> on process-list exports of systems you own or are explicitly authorized to assess.
+  Provided <strong>"AS IS", WITHOUT WARRANTY OF ANY KIND</strong>. Not a substitute for a professional security audit. The author,
+  <strong>Karanam Shrivasta</strong>, accepts <strong>NO LIABILITY</strong> for any damage, data loss, downtime, or legal consequences arising from
+  use or misuse of this software. By using this tool you accept full responsibility for your actions. See the README for the complete disclaimer.
+</div>
+
+{% if current_user.is_authenticated %}
+<nav class="navbar">
+  <div class="nav-brand">🔐 Hidden Window Process Detector</div>
+  <div class="nav-links">
+    <a href="{{ url_for('dashboard.index') }}">Dashboard</a>
+    <a href="{{ url_for('logs.index') }}">Logs</a>
+    <a href="{{ url_for('alerts.index') }}">Alerts</a>
+    <a href="{{ url_for('incidents.index') }}">Incidents</a>
+    <a href="{{ url_for('analytics.index') }}">Analytics</a>
+    <a href="{{ url_for('reports.index') }}">Reports</a>
+    <a href="{{ url_for('settings.index') }}">Settings</a>
+    <a href="{{ url_for('auth.logout') }}">Logout ({{ current_user.username }})</a>
+  </div>
+</nav>
+{% endif %}
+
+<main class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="watermark-footer">
+  <p>
+    Hidden Window Process Detector &copy; {{ 2026 }} — Developed by <strong>Karanam Shrivasta</strong>
+    &middot; <a href="{{ github_url }}" target="_blank" rel="noopener">GitHub</a>
+    &middot; <a href="{{ linkedin_url }}" target="_blank" rel="noopener">LinkedIn</a>
+  </p>
+  <p class="footer-disclaimer">For authorized security auditing and educational use only. No warranty. Use at your own risk.</p>
+</footer>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>
